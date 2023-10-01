@@ -5,6 +5,7 @@ const book = require('./routes/book');
 
 const app = express();
 app.use(express.json());
+app.use('/public', express.static(__dirname+'/public'))
 app.use('/api/books', user);
 app.use('/api/books', book);
 

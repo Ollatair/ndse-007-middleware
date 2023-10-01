@@ -1,3 +1,6 @@
+#books
+public/book/*
+
 # Logs
 logs
 *.log
