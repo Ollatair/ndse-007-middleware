@@ -1,6 +1,7 @@
 const express = require('express');
+
 const router = express.Router();
-const fileMulter = require('../middleware/file')
+const fileMulter = require('../middleware/file');
 const Book = require('../models/book');
 
 const store = {
@@ -29,31 +30,27 @@ router.get('/:id', (req, res) => {
   }
 });
 
-
 // Метод отдаёт на скачиваение файл книги по её **:id**.
 router.get('/:id/download', (req, res) => {
-    const { books } = store;
-    const { id } = req.params;
-    const idx = books.findIndex((el) => el.id === id);
-    if (idx !== -1) { 
+  const { books } = store;
+  const { id } = req.params;
+  const idx = books.findIndex((el) => el.id === id);
+  if (idx !== -1) {
+    const bookId = books[idx];
+    const filePath = bookId.fileBook;
 
-        const bookId = books[idx];
-        const filePath = bookId.fileBook;
-
-        // Отправка файла на скачивание
-        res.download(filePath, (err) => {
-            if (err) {
-            res.status(404);
-            res.json('404 | Файл не найден'); 
-            }
-        });
-
-
-    } else {
-      res.status(404);
-      res.json('404 | книга не найдена');
-    }
-  });
+    // Отправка файла на скачивание
+    res.download(filePath, (err) => {
+      if (err) {
+        res.status(404);
+        res.json('404 | Файл не найден');
+      }
+    });
+  } else {
+    res.status(404);
+    res.json('404 | книга не найдена');
+  }
+});
 
 // создать книгу | создаём книгу и возвращаем её же вместе с присвоенным **ID**
 router.post('/', fileMulter.single('fileBook'), (req, res) => {
@@ -62,15 +59,14 @@ router.post('/', fileMulter.single('fileBook'), (req, res) => {
 
   const newBook = new Book(data);
   books.push(newBook);
-  if(req.file){
-    const {path} = req.file
+  if (req.file) {
+    const { path } = req.file;
     newBook.fileBook = path;
-}
+  }
   res.status(201);
   res.json(newBook);
 });
 
- 
 // редактировать книгу по **ID** | редактируем объект книги, если не найдена, вернём **Code: 404**
 router.put('/:id', fileMulter.single('fileBook'), (req, res) => {
   const { books } = store;
@@ -91,9 +87,9 @@ router.put('/:id', fileMulter.single('fileBook'), (req, res) => {
       fileName,
     };
 
-    if(req.file){
-        const {path} = req.file
-        books[idx].fileBook = path;
+    if (req.file) {
+      const { path } = req.file;
+      books[idx].fileBook = path;
     }
 
     res.json(books[idx]);
@@ -117,8 +113,5 @@ router.delete('/:id', (req, res) => {
     res.json('404 | книга не найдена');
   }
 });
-
-
-
 
 module.exports = router;

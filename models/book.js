@@ -6,12 +6,12 @@ class Book {
       title, description, authors, favorite, fileCover, fileName, fileBook,
     } = data;
 
-    this.id = uuid(),
-    this.title = title ?? '',
-    this.description = description ?? '',
-    this.authors = authors ?? '',
-    this.favorite = favorite ?? '',
-    this.fileCover = fileCover ?? '',
+    this.id = uuid();
+    this.title = title ?? '';
+    this.description = description ?? '';
+    this.authors = authors ?? '';
+    this.favorite = Boolean(favorite);
+    this.fileCover = fileCover ?? '';
     this.fileName = fileName ?? '';
     this.fileBook = fileBook ?? '';
   }
